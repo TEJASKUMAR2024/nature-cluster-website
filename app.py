@@ -507,11 +507,6 @@ GAUTRAA_SECTION = """
         </div>
         <div class="gautraa-card">
             <div class="icon-box;align:center;"></div>
-            <h3>Ecological Harmony</h3>
-            <p>"Creating a meaningful bond between the conscious consumer and the source of their sustenance, rooted in trust and nature."</p>
-        </div>
-        <div class="gautraa-card">
-            <div class="icon-box;align:center;"></div>
             <h3>Regenerative Symbiosis</h3>
             <p>"Our cattle form the heart of a circular, sustainable ecosystem.We restore the vitality of our soil by utilizing farm outputs as bio-stimulants."</p>
         </div>
