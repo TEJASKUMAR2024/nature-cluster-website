@@ -55,6 +55,9 @@ qr_b64 = b64("qr_code.png")
 
 # --- MODULAR COMPONENTS ---
 CSS_STYLES = """
+::-webkit-scrollbar {
+    display: none;
+}
 body{margin:0;width:100%;font-family:Segoe UI,sans-serif;background:#fff;}
 .header{display:flex;justify-content:space-between;align-items:center;padding:15px 40px;background:white;position:fixed;top:0;width:100%;z-index:999;border-bottom:1px solid #eee;box-sizing:border-box;}
 .left{display:flex;align-items:center;}
@@ -259,7 +262,7 @@ body{margin:0;width:100%;font-family:Segoe UI,sans-serif;background:#fff;}
     margin: 40px auto;
     text-align: center;
     position: relative;
-    min-height: 450px;
+    min-height: 350px;
 }
 .testimonial-card {
     background: white;
@@ -387,7 +390,7 @@ HERO_SECTION = f"""
 <video autoplay muted loop playsinline><source src="data:video/{video_type};base64,{video_b64}"></video>
 <div class="overlay">
 <h1>Building Wealth Through Nature</h1>
-<p>Sustainable Farmland Development • Agroforestry • Farm Management</p>
+<p>Sustainable Farmland Development • Agroforestry • Cattle Management</p>
 <div><a href="#" class="btn">Explore Projects</a><a href="#" class="btn">Contact Us</a></div>
 </div>
 </div>
@@ -768,4 +771,4 @@ full_html = f"""
 </html>
 """
 
-components.html(full_html, height=6000, scrolling=True)
+components.html(full_html, height=5850,width=5000, scrolling=True)
