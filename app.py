@@ -766,4 +766,4 @@ full_html = f"""
 </html>
 """
 
-components.html(full_html, height=5850,width=5000, scrolling=True)
+components.html(full_html, height=6000,width=5000, scrolling=True)
