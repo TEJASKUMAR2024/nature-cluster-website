@@ -276,7 +276,7 @@ body{margin:0;width:100%;font-family:Segoe UI,sans-serif;background:#fff;}
 }
 .testimonial-card.active { display: block; }
 .stars { color: #C5A059; font-size: 30px; margin-bottom: 15px; }
-.testimonial-card p { font-size: 25px; font-style: italic; color: #333; margin-bottom: 20px; }
+.testimonial-card p { font-size: 20px; font-style: italic; color: #333; margin-bottom: 20px; }
 .testimonial-card h4 { color: #004B23; font-weight: bold; margin: 0; }
 
 .gallery-wrapper {
@@ -425,7 +425,7 @@ CONTENT_SECTIONS = f"""
 </div>
 
 <div class="why-section">
-    <h2 class="title">The Nature's Cluster Engineering Standard</h2>
+    <h2 class="title">Why Choose Nature's Cluster!?</h2>
     <div class="cards">
         <!-- Each card now uses the 'why-card' class for alignment -->
         <div class="why-card">
