@@ -32,10 +32,30 @@ if os.path.exists("images"):
         if f.lower().endswith((".jpg",".jpeg",".png")):
             imgs.append(f'<img class="slide" src="data:image/jpeg;base64,{b64(os.path.join("images",f))}">')
     slides_html = "".join(imgs)
+    
+# --- GALLERY LOADING ---
+gallery_folder = "home_gallery"
+gallery_html = ""
+if os.path.exists(gallery_folder):
+    imgs = []
+    for f in sorted(os.listdir(gallery_folder)):
+        if f.lower().endswith((".jpg", ".jpeg", ".png")):
+            b64_img = b64(os.path.join(gallery_folder, f))
+            # Include filename as the caption
+            name = os.path.splitext(f)[0].replace("_", " ").title()
+            imgs.append(f'''
+                <div class="gallery-slide">
+                    <img src="data:image/jpeg;base64,{b64_img}">
+                    
+                </div>
+            ''')
+    gallery_html = "".join(imgs)
+    
+qr_b64 = b64("qr_code.png")
 
 # --- MODULAR COMPONENTS ---
 CSS_STYLES = """
-body{margin:0;font-family:Segoe UI,sans-serif;background:#fff;}
+body{margin:0;width:100%;font-family:Segoe UI,sans-serif;background:#fff;}
 .header{display:flex;justify-content:space-between;align-items:center;padding:15px 40px;background:white;position:fixed;top:0;width:100%;z-index:999;border-bottom:1px solid #eee;box-sizing:border-box;}
 .left{display:flex;align-items:center;}
 .logo{height:105px;width:105px;margin-right:15px;}
@@ -160,12 +180,13 @@ body{margin:0;font-family:Segoe UI,sans-serif;background:#fff;}
 }
 
 .gautraa-section {
-    padding: 80px 10%;
+    padding: 50px 10%;
     background: linear-gradient(135deg, #fdfbf7 0%, #f4f1ea 100%);
     border-top: 5px solid #C97A1D;
     border-bottom: 5px solid #C97A1D;
     text-align: center;
     position: relative;
+    margin-top:20px;
 }
 
 .gautraa-title {
@@ -174,6 +195,7 @@ body{margin:0;font-family:Segoe UI,sans-serif;background:#fff;}
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 3px;
+    margin-top:20px;
 }
 
 .gautraa-tagline {
@@ -229,6 +251,69 @@ body{margin:0;font-family:Segoe UI,sans-serif;background:#fff;}
     margin-top: 10px;
     /* Uniform height prevents wobbling layouts */
     min-height: 80px; 
+}
+
+
+.testimonial-container {
+    max-width: 600px;
+    margin: 40px auto;
+    text-align: center;
+    position: relative;
+    min-height: 450px;
+}
+.testimonial-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border: 1px solid #E0DCD0;
+    min-height: 200px;
+    min-width: 500px;
+    display: none; /* Hidden by default */
+}
+.testimonial-card.active { display: block; }
+.stars { color: #C5A059; font-size: 30px; margin-bottom: 15px; }
+.testimonial-card p { font-size: 25px; font-style: italic; color: #333; margin-bottom: 20px; }
+.testimonial-card h4 { color: #004B23; font-weight: bold; margin: 0; }
+
+.gallery-wrapper {
+    background: #002b16; /* Deep Dark Green */
+    padding: 60px 10%;
+    text-align: center;
+    margin-radius:20px;
+}
+.gallery-container {
+    max-width: 1000px;
+    height: 450px;
+    margin: 40px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Spacing between the 3 visible images */
+    overflow: hidden;
+}
+
+.gallery-slide {
+    width: 30%; /* Three images side-by-side */
+    height: 70%;
+    transition: all 0.6s ease-in-out;
+    filter: brightness(0.4); /* Dim side images */
+    transform: scale(0.9);
+    
+}
+
+/* The highlighted center image */
+.gallery-slide.active {
+    filter: brightness(1);
+    transform: scale(1.2); /* Make it pop */
+    border: 2px solid #SADDLEBROWN;
+    box-shadow: 0 0 0px #C97A1D;
+    box-radius:20px;
+    z-index: 0;
+}
+
+.gallery-slide img { 
+    width: 100%; height: 100%; object-fit: cover; border-radius: 10px; 
 }
 
 .footer {
@@ -334,10 +419,6 @@ CONTENT_SECTIONS = f"""
         <h1 class="counter" data-target="50" data-suffix="+">0</h1>
         <p>Families Benefited</p>
     </div>
-    <div class="metric">
-        <h1 class="counter" data-target="4" data-suffix="">0</h1>
-        <p>Successful Projects</p>
-    </div>
 </div>
 
 <div class="why-section">
@@ -407,7 +488,7 @@ FEATURED_SECTION = """
 """
 GAUTRAA_SECTION = """
 <div class="gautraa-section">
-    <h2 class="gautraa-title">GAUTRAA</h2>
+    <h2 class="gautraa-title"style="color:#2D241C">GAUTRAA</h2>
     <p class="gautraa-tagline">Nurturing Native Breeds. Building Sustainable Futures.</p>
     
     <div class="gautraa-grid">
@@ -426,6 +507,11 @@ GAUTRAA_SECTION = """
             <h3>Ecological Harmony</h3>
             <p>"Creating a meaningful bond between the conscious consumer and the source of their sustenance, rooted in trust and nature."</p>
         </div>
+        <div class="gautraa-card">
+            <div class="icon-box;align:center;"></div>
+            <h3>Regenerative Symbiosis</h3>
+            <p>"Our cattle form the heart of a circular, sustainable ecosystem.We restore the vitality of our soil by utilizing farm outputs as bio-stimulants."</p>
+        </div>
     </div>
     <div style="margin-top: 50px; text-align: center;">
         <a href="/gautraa-initiative" class="btn" style="background:#C5A059; color:#2D241C; padding:15px 30px; border-radius:30px; text-decoration:none; font-weight:bold; font-size:18px; display:inline-block;">
@@ -435,7 +521,38 @@ GAUTRAA_SECTION = """
 </div>
 """
 
-qr_b64 = b64("qr_code.png") 
+GALLERY_SECTION = f"""
+<div class="section gallery-wrapper">
+    <h2 class="title" style="color:white">Nature's Cluster Gallery</h2>
+    <div class="gallery-container">
+        {gallery_html}
+    </div>
+</div>
+"""
+
+
+TESTIMONIAL_SECTION = """
+<div class="section" style="background:#FDFBF7;">
+    <h2 class="title">Client Testimonies</h2>
+    <div id="testimony-carousel" class="testimonial-container">
+        <div class="testimonial-card active">
+            <div class="stars">★★★★★</div>
+            <p>"Nature's Cluster transformed my vision of farmland into a high-performing asset. Their engineering standard is truly unmatched."</p>
+            <h4>— Dr. Vikram Rao</h4>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p>"The transparency in their reporting and the dedication to organic practices made me trust them completely with my land."</p>
+            <h4>— Anitha Reddy</h4>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <p>"Gautraa dairy products are the purest I've found. It’s clear they put the same care into their cattle as they do their fields."</p>
+            <h4>— Suresh Kumar</h4>
+        </div>
+    </div>
+</div>
+"""
 
 FOOTER_SECTION = f"""
 <div class="footer">
@@ -575,6 +692,59 @@ const observer = new IntersectionObserver((entries) => {
 
 const impactSection = document.querySelector('.impact');
 if (impactSection) observer.observe(impactSection);
+
+// 5. Testimonial Carousel Logic
+let tIdx = 0;
+const tCards = document.getElementsByClassName("testimonial-card");
+function showTestimonials() {
+    if (tCards.length === 0) return;
+    for (let j = 0; j < tCards.length; j++) {
+        tCards[j].style.display = "none";
+    }
+    tIdx = (tIdx + 1) % tCards.length;
+    tCards[tIdx].style.display = "block";
+}
+if (tCards.length > 0) {
+    tCards[0].style.display = "block";
+    setInterval(showTestimonials, 5000); // Rotates every 5 seconds
+}
+// 6. Sliding Gallery Carousel Logic
+let gIdx = 1; // Start with the second image as the initial center
+const gSlides = document.getElementsByClassName("gallery-slide");
+
+function rotateGallery() {
+    // Hide all first
+    for (let j = 0; j < gSlides.length; j++) {
+        gSlides[j].style.display = "none";
+        gSlides[j].classList.remove("active");
+    }
+
+    // Indices for Left, Center, Right
+    let left = (gIdx - 1 + gSlides.length) % gSlides.length;
+    let center = gIdx;
+    let right = (gIdx + 1) % gSlides.length;
+
+    // Display the three visible images
+    gSlides[left].style.display = "block";
+    gSlides[center].style.display = "block";
+    gSlides[right].style.display = "block";
+
+    // Highlight the center one
+    gSlides[center].classList.add("active");
+
+    // Increment index to move the "flow" forward
+    gIdx = (gIdx + 1) % gSlides.length;
+}
+
+// Ensure there are enough images to form a trio
+if (gSlides.length >= 3) {
+    rotateGallery(); // Initial call
+    setInterval(rotateGallery, 2000); // 2 seconds per shift
+} else {
+    // If fewer than 3, just show them all
+    for (let j = 0; j < gSlides.length; j++) gSlides[j].style.display = "block";
+}
+
 </script>
 """
 
@@ -590,6 +760,8 @@ full_html = f"""
 {CONTENT_SECTIONS}
 {FEATURED_SECTION}
 {GAUTRAA_SECTION}
+{GALLERY_SECTION}
+{TESTIMONIAL_SECTION}
 {FOOTER_SECTION}
 {JS_LOGIC}
 </body>
