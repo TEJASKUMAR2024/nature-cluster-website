@@ -15,6 +15,7 @@ def b64(path):
 
 # --- DATA LOADING ---
 logo_b64 = b64("logo.jpg")
+mmc_font_b64 = b64("mmc.ttf")
 
 video_b64 = ""
 video_type = "mp4"
@@ -41,7 +42,6 @@ if os.path.exists(gallery_folder):
     for f in sorted(os.listdir(gallery_folder)):
         if f.lower().endswith((".jpg", ".jpeg", ".png")):
             b64_img = b64(os.path.join(gallery_folder, f))
-            # Include filename as the caption
             name = os.path.splitext(f)[0].replace("_", " ").title()
             imgs.append(f'''
                 <div class="gallery-slide">
@@ -58,7 +58,18 @@ CSS_STYLES = """
 ::-webkit-scrollbar {
     display: none;
 }
-body{margin:0;width:100%;font-family:Segoe UI,sans-serif;background:#fff;}
+
+@font-face {{
+    font-family: 'MMC';
+    /* Use data:font/woff if you are using a .woff file */
+    src: url(data:font/truetype;charset=utf-8;base64,{mmc_font_b64}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}}
+
+@import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+body{margin:0;width:100%;font-family:MMC;background:#fff;}
 .header{display:flex;justify-content:space-between;align-items:center;padding:15px 40px;background:white;position:fixed;top:0;width:100%;z-index:999;border-bottom:1px solid #eee;box-sizing:border-box;}
 .left{display:flex;align-items:center;}
 .logo{height:105px;width:105px;margin-right:15px;}
@@ -72,7 +83,7 @@ body{margin:0;width:100%;font-family:Segoe UI,sans-serif;background:#fff;}
 
 /* English Styling */
 .name-en {
-    font-family:Inter;
+    font-family:MMC;
     font-size: 42px; 
     font-weight: 800; 
     color: #004B23; 
@@ -83,7 +94,7 @@ body{margin:0;width:100%;font-family:Segoe UI,sans-serif;background:#fff;}
 }
 .tag-en { 
     color: saddlebrown;
-     font-family:Cabin;
+     font-family:'MMC',Segoe UI, sans-serif;
     font-style: italic; 
     font-size: 24px; 
     text-align: left; 
@@ -118,12 +129,112 @@ body{margin:0;width:100%;font-family:Segoe UI,sans-serif;background:#fff;}
 
 .menu{cursor:pointer;}
 .menu span{display:block;width:35px;height:4px;background:#004B23;margin:6px;border-radius:10px;}
-.drawer{position:fixed;right:-320px;top:0;width:300px;height:10%;background:#004B23;transition:.4s;z-index:1001;}
-.drawer.active{right:0;}
-.drawer a{display:block;color:white;text-decoration:none;padding:20px 30px;font-size:20px;}
-.close{color:white;font-size:35px;padding:20px;text-align:right;cursor:pointer;}
+
+
+/* --- UPDATED DRAWER & NAVIGATION STYLES --- */
+.drawer {
+    position: fixed;
+    right: -320px;
+    top: 0;
+    width: 270px;
+    height: 5.9%; 
+    background: #004B23; /* Primary Dark Green */
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+    overflow-y: auto;
+    box-shadow: -5px 0 25px rgba(0,0,0,0.5); /* Stronger shadow for depth */
+}
+.drawer.active { 
+    right: 0; 
+}
+
+/* Main Navigation Links & Dropdown Button */
+.drawer a:not(.close), .dropbtn {
+    display: block;
+    color: #FDFBF7; /* Off-white for crisp readability */
+    text-decoration: none;
+    padding: 20px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.3s ease;
+    border-left: 0px solid #C97A1D; /* Initial hidden highlight bar */
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Highlight Hover Effect */
+.drawer a:not(.close):hover, .dropbtn:hover {
+    background: rgba(201, 122, 29, 0.15); /* Subtle golden tint */
+    color: #C97A1D; /* Golden Brown text */
+    border-left: 8px solid #C97A1D; /* Thick highlight bar appears */
+    padding-left: 38px; /* Pushes text right dynamically */
+}
+
+/* Dropdown Container */
+.dropdown {
+    width: 100%;
+    display: block;
+}
+
+.dropbtn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* Active state for the dropdown button itself */
+.dropdown.active .dropbtn {
+    color: #C97A1D;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* Dropdown Content Area */
+.dropdown-content {
+    display: none;
+    background-color: #002210; /* Deeper green to separate sub-menu */
+    flex-direction: column;
+    width: 100%;
+}
+
+.dropdown.active .dropdown-content { 
+    display: flex; 
+}
+
+/* Nested Dropdown Links */
+.dropdown-content a:not(.close) {
+    padding: 15px 30px 15px 50px; /* Deep indentation for visual hierarchy */
+    font-size: 15px;
+    font-weight: 400;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+/* Highlight Hover Effect for Nested Links */
+.dropdown-content a:not(.close):hover {
+    background: rgba(201, 122, 29, 0.2);
+    border-left: 4px solid #C97A1D; /* Thinner highlight for sub-items */
+    padding-left: 56px; /* Smooth text shift */
+}
+
+/* Close Button Styling */
+.close {
+    color: white;
+    font-size: 40px;
+    padding: 15px 30px;
+    text-align: right;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: color 0.3s ease;
+}
+.close:hover {
+    color: #C97A1D;
+}
+
 .hero{position:relative;height:15vh;overflow:hidden;}
-.hero video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;}
+.hero video{position:relative;top:0;left:0;width:100%;height:100%;object-fit:cover;}
 .overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;flex-direction:column;justify-content:center;align-items:center;color:white;text-align:center;padding:20px;}
 .overlay h1{font-size:72px;margin:10px;}
 .btn{background:#C97A1D;color:white;padding:14px 28px;border-radius:30px;margin:8px;display:inline-block;text-decoration:none;}
@@ -380,9 +491,40 @@ HEADER_SECTION = f"""
             <div id="tg" class="tag-en">Land of Fortune</div>
         </div>
     </div>
-    <div class="menu" onclick="toggleDrawer()"><span></span><span></span><span></span></div>
+    <div class="menu" onclick="toggleDrawer()">
+        <span></span><span></span><span></span>
+    </div>
 </div>
-...
+
+<div id="drawer" class="drawer">
+    <div class="close" onclick="toggleDrawer()">&times;</div>
+    <a href="#home" onclick="toggleDrawer()">Home</a>
+    <a href="#about" onclick="toggleDrawer()">About Us</a>
+    
+    <div class="dropdown" id="projects-dropdown">
+        <a class="dropbtn" onclick="toggleDropdown()">Our Projects <span id="arrow">&#9662;</span></a>
+        <div class="dropdown-content">
+            <a href="/Chandan_Valley_Phase_1" target="_self">
+    Chandan Valley Phase-I
+</a>
+
+<a href="/Chandan_Valley_Phase_2" target="_self">
+    Chandan Valley Phase-II
+</a>
+
+<a href="/Tribal_Trails" target="_self">
+    Tribal Trails
+</a>
+
+<a href="/Rhythm_of_Rivers" target="_self">
+    Rhythm of Rivers
+</a>
+        </div>
+    </div>
+    
+    <a href="/Gautraa" target="_blank">Gautraa</a>
+    <a href="#contact" onclick="toggleDrawer()">Contact Us</a>
+</div>
 """
 
 HERO_SECTION = f"""
@@ -512,7 +654,7 @@ GAUTRAA_SECTION = """
         </div>
     </div>
     <div style="margin-top: 50px; text-align: center;">
-        <a href="/gautraa-initiative" class="btn" style="background:#C5A059; color:#2D241C; padding:15px 30px; border-radius:30px; text-decoration:none; font-weight:bold; font-size:18px; display:inline-block;">
+        <a href="https://gautraa-m9qgdo95josswktvjaiayx.streamlit.app/" class="btn" style="background:#C5A059; color:#2D241C; padding:15px 30px; border-radius:30px; text-decoration:none; font-weight:bold; font-size:18px; display:inline-block;">
             Explore the Gautraa Way →
         </a>
     </div>
@@ -601,6 +743,20 @@ JS_LOGIC = """
 // 1. Drawer Toggle Logic
 function toggleDrawer() {
     document.getElementById('drawer').classList.toggle('active');
+}
+
+// 1.5 Dropdown Toggle Logic
+function toggleDropdown() {
+    const dropdown = document.getElementById('projects-dropdown');
+    const arrow = document.getElementById('arrow');
+    dropdown.classList.toggle('active');
+    
+    // Toggle arrow direction
+    if (dropdown.classList.contains('active')) {
+        arrow.innerHTML = '&#9652;'; // Up arrow
+    } else {
+        arrow.innerHTML = '&#9662;'; // Down arrow
+    }
 }
 
 // 2. Language Switcher Logic
@@ -766,4 +922,4 @@ full_html = f"""
 </html>
 """
 
-components.html(full_html, height=6000,width=5000, scrolling=True)
+components.html(full_html, height=7000,width=5000, scrolling=True)
